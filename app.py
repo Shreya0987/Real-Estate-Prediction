@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import joblib 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
@@ -82,20 +83,7 @@ if st.sidebar.button("Assess Investment"):
             x_new = pd.DataFrame([row])
             x_new_d = pd.get_dummies(x_new, drop_first=True)
 
-            # Optional model backend — try to import joblib; if missing, continue with heuristics
-    try:
-        import joblib
-        JOBLIB_AVAILABLE = True
-    except Exception:
-        JOBLIB_AVAILABLE = False
-        joblib = None
 
-    # later in the app, when trying to load models
-if JOBLIB_AVAILABLE and os.path.exists('rf_classifier.joblib') and os.path.exists('rf_regressor.joblib'):
-    try:
-        clf = joblib.load('rf_classifier.joblib')
-        reg = joblib.load('rf_regressor.joblib')
-        model_feats = joblib.load('model_features.joblib')
         # ... use models ...
     except Exception as e:
         st.warning("Model files present but failed to load: " + str(e))
@@ -156,4 +144,5 @@ else:
 
     # Extra suggestion
     st.markdown("**Note:** This app uses heuristic rules by default to give instant results. For model-backed predictions, run a training script to produce `rf_classifier.joblib`, `rf_regressor.joblib`, and `model_features.joblib` then restart the app.")
+
 
